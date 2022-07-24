@@ -230,12 +230,11 @@ app.get('/list', async (req, res) => {
       },
     });
   } catch (error) {
-    // const { message, name } = error;
-    // res.status(400).json({
-    //   message,
-    //   name,
-    // });
-    res.status(400).json(error);
+    const { message, name } = error;
+    res.status(400).json({
+      message,
+      name,
+    });
   }
 });
 
