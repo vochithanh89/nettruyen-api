@@ -54,13 +54,13 @@ app.get('/', (req, res) => {
 
 app.get('/filter', async (req, res) => {
   try {
-    const html = await getHtmlData('/tim-truyen');
+    const html = await getHtmlData('/the-loai');
     $ = cheerio.load(html);
     const categories = [];
     $('.ModuleContent .module-title + .nav li').each((index, element) => {
       const categoryName = $(element).find('a').text();
       const categoryHref = $(element).find('a').attr('href');
-      const categoryId = categoryHref.slice(categoryHref.lastIndexOf('/tim-truyen') + 12, categoryHref.length);
+      const categoryId = categoryHref.slice(categoryHref.lastIndexOf('/the-loai') + 10, categoryHref.length);
 
       categories.push({
         name: categoryName,
@@ -141,13 +141,13 @@ app.get('/filter', async (req, res) => {
 
 app.get('/category', async (req, res) => {
   try {
-    const html = await getHtmlData('/tim-truyen');
+    const html = await getHtmlData('/the-loai');
     $ = cheerio.load(html);
     const categories = [];
     $('.ModuleContent .module-title + .nav li').each((index, element) => {
       const categoryName = $(element).find('a').text();
       const categoryHref = $(element).find('a').attr('href');
-      const categoryId = categoryHref.slice(categoryHref.lastIndexOf('/tim-truyen') + 12, categoryHref.length);
+      const categoryId = categoryHref.slice(categoryHref.lastIndexOf('/the-loai') + 10, categoryHref.length);
 
       categories.push({
         name: categoryName,
@@ -169,7 +169,7 @@ app.get('/list', async (req, res) => {
   try {
     const { page = 1, status, sort, category = 'all' } = req.query;
 
-    let path = category !== 'all' ? `/tim-truyen/${category}` : '/tim-truyen';
+    let path = category !== 'all' ? `/the-loai/${category}` : '/the-loai';
 
     let myParams = {
       status: status,
@@ -242,7 +242,7 @@ app.get('/search', async (req, res) => {
   try {
     const { page = 1, q } = req.query;
 
-    const html = await getHtmlData('/tim-truyen', {
+    const html = await getHtmlData('/the-loai', {
       params: {
         keyword: q,
         page: page,
@@ -320,7 +320,7 @@ app.get('/details/:id', async (req, res) => {
     $('.kind.row .col-xs-8 a').each((index, element) => {
       const categoryName = $(element).text();
       const categoryHref = $(element).attr('href');
-      const categoryId = categoryHref.slice(categoryHref.lastIndexOf('/tim-truyen') + 12, categoryHref.length);
+      const categoryId = categoryHref.slice(categoryHref.lastIndexOf('/the-loai') + 10, categoryHref.length);
 
       categories.push({ categoryName, categoryId });
     });
