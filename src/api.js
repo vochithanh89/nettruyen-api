@@ -14,9 +14,9 @@ const getHtmlData = async (path, options) => {
 /* CROS middleware */
 app.use(function (req, res, next) {
   // Mọi domain
-  res.header('Access-Control-Allow-Origin', '*');
+  // res.header('Access-Control-Allow-Origin', '*');
 
-  // res.header("Access-Control-Allow-Origin", "https://cttruyen.netlify.app");
+  res.header('Access-Control-Allow-Origin', 'https://cttruyen.netlify.app');
 
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
@@ -177,13 +177,6 @@ app.get('/list', async (req, res) => {
       page: page,
     };
 
-    if (sort == 0 && status == 2 && category === 'all') {
-      path = '/truyen-full';
-      myParams = {
-        page,
-      };
-    }
-
     const html = await getHtmlData(path, {
       params: {
         ...myParams,
@@ -217,7 +210,7 @@ app.get('/list', async (req, res) => {
     });
     const lastPageHref = $('.pagination').find('li:last-child a').attr('href');
     let lastPageCount = lastPageHref ? lastPageHref.slice(lastPageHref.indexOf('page=') + 5, lastPageHref.length) : 1;
-    const title = $('.Module-179 .ModuleContent .nav li.active a').text();
+    const title = $('.Module-248 .ModuleContent .nav li.active a').text();
 
     lastPageCount = Number(lastPageCount);
 
