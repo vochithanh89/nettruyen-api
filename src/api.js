@@ -2,9 +2,9 @@ const express = require('express');
 const cheerio = require('cheerio');
 const axios = require('axios');
 const app = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 8080;
 
-const baseUrl = 'http://www.nettruyenme.com';
+const baseUrl = 'http://nhattruyenone.com/';
 
 const getHtmlData = async (path, options) => {
   const res = await axios.get(baseUrl + path, options);
@@ -14,9 +14,9 @@ const getHtmlData = async (path, options) => {
 /* CROS middleware */
 app.use(function (req, res, next) {
   // Mọi domain
-  res.header('Access-Control-Allow-Origin', '*');
+  // res.header('Access-Control-Allow-Origin', '*');
 
-  // res.header("Access-Control-Allow-Origin", "https://cttruyen.netlify.app");
+  res.header('Access-Control-Allow-Origin', 'https://cttruyen.netlify.app');
 
   res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
   next();
@@ -54,13 +54,13 @@ app.get('/', (req, res) => {
 
 app.get('/filter', async (req, res) => {
   try {
-    const html = await getHtmlData('/tim-truyen');
+    const html = await getHtmlData('/the-loai');
     $ = cheerio.load(html);
     const categories = [];
     $('.ModuleContent .module-title + .nav li').each((index, element) => {
       const categoryName = $(element).find('a').text();
       const categoryHref = $(element).find('a').attr('href');
-      const categoryId = categoryHref.slice(categoryHref.lastIndexOf('/tim-truyen') + 12, categoryHref.length);
+      const categoryId = categoryHref.slice(categoryHref.lastIndexOf('/the-loai') + 10, categoryHref.length);
 
       categories.push({
         name: categoryName,
@@ -141,13 +141,13 @@ app.get('/filter', async (req, res) => {
 
 app.get('/category', async (req, res) => {
   try {
-    const html = await getHtmlData('/tim-truyen');
+    const html = await getHtmlData('/the-loai');
     $ = cheerio.load(html);
     const categories = [];
     $('.ModuleContent .module-title + .nav li').each((index, element) => {
       const categoryName = $(element).find('a').text();
       const categoryHref = $(element).find('a').attr('href');
-      const categoryId = categoryHref.slice(categoryHref.lastIndexOf('/tim-truyen') + 12, categoryHref.length);
+      const categoryId = categoryHref.slice(categoryHref.lastIndexOf('/the-loai') + 10, categoryHref.length);
 
       categories.push({
         name: categoryName,
@@ -169,20 +169,13 @@ app.get('/list', async (req, res) => {
   try {
     const { page = 1, status, sort, category = 'all' } = req.query;
 
-    let path = category !== 'all' ? `/tim-truyen/${category}` : '/tim-truyen';
+    let path = category !== 'all' ? `/the-loai/${category}` : '/the-loai';
 
     let myParams = {
       status: status,
       sort: sort,
       page: page,
     };
-
-    if (sort == 0 && status == 2 && category === 'all') {
-      path = '/truyen-full';
-      myParams = {
-        page,
-      };
-    }
 
     const html = await getHtmlData(path, {
       params: {
@@ -217,7 +210,7 @@ app.get('/list', async (req, res) => {
     });
     const lastPageHref = $('.pagination').find('li:last-child a').attr('href');
     let lastPageCount = lastPageHref ? lastPageHref.slice(lastPageHref.indexOf('page=') + 5, lastPageHref.length) : 1;
-    const title = $('.Module-179 .ModuleContent .nav li.active a').text();
+    const title = $('.Module-248 .ModuleContent .nav li.active a').text();
 
     lastPageCount = Number(lastPageCount);
 
@@ -230,12 +223,11 @@ app.get('/list', async (req, res) => {
       },
     });
   } catch (error) {
-    // const { message, name } = error;
-    // res.status(400).json({
-    //   message,
-    //   name,
-    // });
-    res.status(400).json(error);
+    const { message, name } = error;
+    res.status(400).json({
+      message,
+      name,
+    });
   }
 });
 
@@ -243,7 +235,7 @@ app.get('/search', async (req, res) => {
   try {
     const { page = 1, q } = req.query;
 
-    const html = await getHtmlData('/tim-truyen', {
+    const html = await getHtmlData('/the-loai', {
       params: {
         keyword: q,
         page: page,
@@ -321,7 +313,7 @@ app.get('/details/:id', async (req, res) => {
     $('.kind.row .col-xs-8 a').each((index, element) => {
       const categoryName = $(element).text();
       const categoryHref = $(element).attr('href');
-      const categoryId = categoryHref.slice(categoryHref.lastIndexOf('/tim-truyen') + 12, categoryHref.length);
+      const categoryId = categoryHref.slice(categoryHref.lastIndexOf('/the-loai') + 10, categoryHref.length);
 
       categories.push({ categoryName, categoryId });
     });
